@@ -54,24 +54,26 @@
     }
 
     .gif-crop {
-      /* The max width you want for the cropped area */
-      max-width:990px;
-      width: 100%;         /* Let it shrink on smaller screens */
-      height: 200px;       /* The crop height */
-      overflow: hidden;    
-      position: relative;  /* for optional positioning of <img> */
-      margin: 0 auto;      /* center the container if desired */
-      border: 0px solid #ccc; /* just for visualization */
+      width: 100%;
+      max-width: 990px;
+      margin: 0 auto;
+      overflow: hidden;   /* Hide the part we clip away */
+      position: relative;
     }
 
     .gif-crop img {
-      display: block;  /* remove inline spacing */
-      /* Option 1: let the GIF fill the container’s width fully */
-      width: 101%;  
-
-      /* If you need to shift the GIF left or up, 
-         you can use negative margins or absolute positioning. */
-      /* margin-left: -20px; etc. */
+      display: block;
+      width: 100%;       /* Ensures it occupies 100% line width */
+      /*
+        The clip-path below insets each side by 1% of 
+        the image’s final display box. 
+      */
+      clip-path: inset(1% 1% 1% 1%);
+      /*
+        Use position: relative if needed for clip-path 
+        (some browsers require it).
+      */
+      position: relative;
     }
 
 
@@ -245,7 +247,8 @@
     </p>
 
     <div class="gif-crop">
-      <img src="intro_ani.gif" alt="Cropped GIF" style="margin-left: -2px; margin-top: -20px;">
+      <!-- Insert your actual GIF path -->
+      <img src="./intro_ani.gif" alt="Intro animation" />
     </div>
 
 
@@ -826,17 +829,17 @@
         demos: [
         {
           demoTitle: 'Demo 1',
-          script: '"Harry, you\'re a great wizard, you know." <br /> "I\'m not as good as you," said Harry, very embarrassed, as she let go of him. <br /> "Me!" said Hermione. "Books! And cleverness! There are more important things, friendship and bravery and, oh Harry, be careful!"',
+          script: '"I don\'t need your help," Lisbeth snapped. <br /> Mikael sighed. "Maybe not. But sometimes, accepting help isn\'t a sign of weakness." <br /> She stared at him, her defenses wavering. In his eyes, she saw not pity, but understanding, a rare and disarming sight.',
           groupA: [
-            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/1.wav' },
-            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/1.wav' },
-            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/1.wav' },
-            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/1.wav', highlight: true },
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/3.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/3.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/3.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/3.wav', highlight: true },
           ],
           groupB: [
-            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/1.wav' },
-            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/1.wav' },
-            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/1.wav' },
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/3.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/3.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/3.wav' },
           ],
         },
         {
@@ -856,17 +859,17 @@
         },
         {
           demoTitle: 'Demo 3',
-          script: '"I don\'t need your help," Lisbeth snapped. <br /> Mikael sighed. "Maybe not. But sometimes, accepting help isn\'t a sign of weakness." <br /> She stared at him, her defenses wavering. In his eyes, she saw not pity, but understanding, a rare and disarming sight.',
+          script: '"Harry, you\'re a great wizard, you know." <br /> "I\'m not as good as you," said Harry, very embarrassed, as she let go of him. <br /> "Me!" said Hermione. "Books! And cleverness! There are more important things, friendship and bravery and, oh Harry, be careful!"',
           groupA: [
-            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/3.wav' },
-            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/3.wav' },
-            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/3.wav' },
-            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/3.wav', highlight: true },
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/1.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/1.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/1.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/1.wav', highlight: true },
           ],
           groupB: [
-            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/3.wav' },
-            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/3.wav' },
-            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/3.wav' },
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/1.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/1.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/1.wav' },
           ],
         },
       ],
