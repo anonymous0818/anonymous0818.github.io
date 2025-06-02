@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Ensures responsiveness on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProsodyLM Audio Demo</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+    /* Base styling */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      color: #333;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1em;
+    }
+
+    h1.page-title {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 0.5em;
+      line-height: 1.2;
+    }
+
+    .teal-text {
+      color: #58C4C2; /* Teal highlight */
+    }
+
+    .intro-text {
+      margin-bottom: 1.5em;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    figure {
+      margin: 0 auto 2em auto;
+      text-align: center;
+    }
+
+    figure img {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .gif-crop {
+      width: 100%;
+      max-width: 990px;
+      margin: 0 auto;
+      overflow: hidden;   /* Hide the part we clip away */
+      position: relative;
+    }
+
+    .gif-crop img {
+      display: block;
+      width: 100%;       /* Ensures it occupies 100% line width */
+      /*
+        The clip-path below insets each side by 1% of 
+        the image’s final display box. 
+      */
+      clip-path: inset(1% 1% 1% 1%);
+      /*
+        Use position: relative if needed for clip-path 
+        (some browsers require it).
+      */
+      position: relative;
+    }
+
+
+    /* Bullet list for Group A/B with teal markers */
+    .baselines-list {
+      margin-left: 0em;
+      list-style-type: disc;
+      margin-bottom: 1.5em; /* spacing below the list */
+      font-size: 1.1em;
+      color: #555;
+    }
+    .baselines-list li::marker {
+      color: #58C4C2; /* Teal bullet points */
+    }
+
+    /* Accordion styling */
+    .accordion-section {
+      margin-bottom: 1.5em;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    .accordion-title {
+      background: #58C4C2;
+      color: #fff;
+      padding: 0.75em 1em;
+      font-weight: 700;
+      font-size: 1.2em;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      position: sticky;
+      top: 0;         /* Sticky at the top of the accordion content */
+      z-index: 1;     /* Ensure it's above the scrolling content */
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .accordion-title:hover {
+      background-color: #49a9a8;
+    }
+
+    .accordion-indicator {
+      font-size: 1.4em;
+      margin-left: 1em;
+      transition: transform 0.3s ease;
+    }
+
+    /* Rotate the indicator when open */
+    .accordion-section.open .accordion-indicator {
+      transform: rotate(45deg);
+    }
+
+    /* Dynamically setting max-height via JS; removing fixed approach */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .accordion-inner {
+      font-size: 1.1em;
+      font-weight: 500;
+      padding: 1em;
+      background: #fff;
+    }
+
+    /* Demo blocks */
+    .demo-block {
+      margin-top: 1.5em;
+      border: 1px solid #606060;
+    }
+
+    .demo-header {
+      background: #606060;
+      color: #fff;
+      padding: 0.75em 1em;
+      font-weight: 700;
+      font-size: 1.1em;
+    }
+
+    .demo-script {
+      background: #fff;
+      padding: 0.75em 1em;
+      border-top: 1px solid #ccc;
+
+      display: flex;
+      align-items: center;    /* Centers vertically */
+      justify-content: center; /* Centers horizontally */
+      min-height: 100px;          /* Example height; adjust as needed */
+      text-align: center;      /* Optionally center the text itself */
+      background-color: #fff;  /* Or any other styling */
+    }
+
+    /* Inner wrapper with left-aligned text. */
+    .demo-script .script-content {
+      font-size: 1.0em;
+      text-align: left;
+      max-width: 80%; /* optional: limit line width */
+    }
+
+    .demo-group-a {
+      background: #E3F3F3;
+      padding: 0.75em 1em;
+      border-top: 1px solid #ccc;
+    }
+
+    .demo-group-b {
+      background: #f0f0f0;
+      padding: 0.75em 1em;
+      border-top: 1px solid #ccc;
+    }
+
+    .playback-row {
+      margin-top: 0.5em;
+    }
+
+    .playback-row-line {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5em;
+    }
+
+    .method-label {
+      width: 120px;
+      font-weight: 600;
+      color: #333;
+      margin-right: 0.5em;
+    }
+
+    .primary-approach {
+      color: #58C4C2;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    audio {
+      vertical-align: middle;
+      margin-right: 1em;
+    }
+
+    @media (max-width: 600px) {
+      .page-title {
+        font-size: 1.8em;
+      }
+      .accordion-title {
+        font-size: 1.1em;
+      }
+      .method-label {
+        width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-title">
+      ProsodyLM: Uncovering the Emerging Prosody Processing Capabilities in Speech Language Models
+      - <span class="teal-text">Audio Demo</span>
+    </h1>
+
+    <p class="intro-text">
+      This webpage shows some audio examples for ProsodyLM, a speech language model with explicit modeling
+      of prosody. The following demos correspond to <b>Section 4.2</b> in the original paper, showcasing
+      how ProsodyLM can generate appropriate prosody given the text context.
+    </p>
+
+    <div class="gif-crop">
+      <!-- Insert your actual GIF path -->
+      <img src="./intro_ani.gif" alt="Intro animation" />
+    </div>
+
+
+    <p class="intro-text">Two groups of methods are compared:</p>
+    <ul class="baselines-list">
+      <li><b class="teal-text">Group A Baselines</b>, which are pre-trained on comparable audiobook data</li>
+      <li><b class="teal-text">Group B Baselines</b>, which are state-of-the-art/commercial systems trained
+      using data with much higher quality and volume, and undergo additional tuning steps.</li>
+    </ul>
+
+    <div id="accordion-container"></div>
+  </div>
+
+  <script>
+    // Create individual method row
+    function createMethodRow(methodName, audioSrc, highlight=false) {
+      const highlightClass = highlight ? 'primary-approach' : '';
+      return `
+        <div class="playback-row-line">
+          <span class="method-label ${highlightClass}">${methodName}:</span>
+          <audio controls>
+            <source src="${audioSrc}" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      `;
+    }
+
+    // Create one full demo block
+    function createDemoBlock(demoTitle, scriptText, groupA, groupB) {
+      const groupARows = groupA.map(m =>
+        createMethodRow(m.name, m.src, m.highlight)).join('');
+      const groupBRows = groupB.map(m =>
+        createMethodRow(m.name, m.src, m.highlight)).join('');
+
+      return `
+        <div class="demo-block">
+          <div class="demo-header">${demoTitle}</div>
+          <div class="demo-script">
+            <div class="script-content">
+              <i>${scriptText}</i>
+            </div>
+          </div>
+          <div class="demo-group-a">
+            <strong>Group A Baselines:</strong> (comparable data and pre-training)
+            <div class="playback-row">${groupARows}</div>
+          </div>
+          <div class="demo-group-b">
+            <strong>Group B Baselines:</strong> (more data and sophisticated training)
+            <div class="playback-row">${groupBRows}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Create one accordion section
+    function createAccordionSection(title, sectionIntro, demoBlocksHTML) {
+      return `
+        <div class="accordion-section">
+          <h2 class="accordion-title">
+            ${title}
+            <span class="accordion-indicator">+</span>
+          </h2>
+          <div class="accordion-content">
+            <div class="accordion-inner">
+              <p>${sectionIntro}</p>
+              ${demoBlocksHTML}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const accordionData = [
+      {
+        title: '1. Direct Style Specification',
+        sectionIntro: 'This section corresponds to <strong> Section 4.2.1 </strong> in the paper. Each script consists of a neutral quote followed by a style description of the character who says the quote. Pay attention to <strong>how the style description affects the prosody of the quote</strong>.',
+        demos: [
+        {
+          demoTitle: 'Demo 1',
+          script: '\"Not every question has a simple answer!\" He said in a low voice.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/low_M.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/low_M.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/low_M.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/low_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/low_M.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/low_M.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/low_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 2',
+          script: '\"Not every question has a simple answer!\" He said in a high voice.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/high_M.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/high_M.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/high_M.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/high_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/high_M.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/high_M.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/high_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 3',
+          script: '\"People see what they want to see, nothing more!\" He said slowly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/slow_M.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/slow_M.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/slow_M.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/slow_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/slow_M.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/slow_M.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/slow_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 4',
+          script: '\"People see what they want to see, nothing more!\" He said quickly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/fast_M.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/fast_M.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/fast_M.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/fast_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/fast_M.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/fast_M.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/fast_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 5',
+          script: '\"Some things are understood without being spoken!\" He said loudly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/loud_M.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/loud_M.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/loud_M.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/loud_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/loud_M.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/loud_M.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/loud_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 6',
+          script: '\"Some things are understood without being spoken!\" He said softly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/quiet_M.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/quiet_M.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/quiet_M.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/quiet_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/quiet_M.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/quiet_M.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/quiet_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 7',
+          script: '\"Not every question has a simple answer!\" He said in a low voice.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/low_F.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/low_F.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/low_F.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/low_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/low_F.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/low_F.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/low_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 8',
+          script: '\"Not every question has a simple answer!\" He said in a high voice.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/high_F.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/high_F.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/high_F.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/high_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/high_F.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/high_F.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/high_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 9',
+          script: '\"The past is always part of the present!\" He said slowly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/slow_F.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/slow_F.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/slow_F.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/slow_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/slow_F.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/slow_F.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/slow_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 10',
+          script: '\"The past is always part of the present!\" He said quickly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/fast_F.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/fast_F.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/fast_F.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/fast_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/fast_F.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/fast_F.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/fast_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 11',
+          script: '\"Time moves forward, whether we\'re ready or not!\" He said loudly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/loud_F.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/loud_F.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/loud_F.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/loud_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/loud_F.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/loud_F.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/loud_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 12',
+          script: '\"Time moves forward, whether we\'re ready or not!\" He said softly.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/1a/quiet_F.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/1a/quiet_F.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/1a/quiet_F.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/1a/quiet_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/1a/quiet_F.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/1a/quiet_F.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/1a/quiet_F.wav' },
+          ],
+        },
+      ]
+
+
+      },
+      {
+        title: '2. Indirect Style Inference',
+        sectionIntro: 'This section corresponds to <strong> Section 4.2.2 </strong> in the paper. Each script consists of a character description followed by a neutral quote uttered by the character. Pay attention to <strong> how the character description affects the prosody of the quote</strong>.',
+        demos: [
+        {
+          demoTitle: 'Demo 1 - low-voiced character',
+          script: 'The giant’s chest rose and fell like the tide, steady and unhurried, his presence casting long shadows across the firelit hall. When he turned to look at you, it was slow, deliberate, like mountains shifting under their own weight. His lips barely moved when he spoke, as if his words were carved from stone rather than formed from breath.<br /><br />"What we do today shapes what comes next!" He said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/low_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/low_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/low_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/low_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/low_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/low_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/low_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 2 - high-voiced character',
+          script: 'The little fox twitched its ears and bounced on its paws, its golden fur standing on end with excitement. Every movement was sharp and sudden, a creature wound too tight, barely able to contain its own energy. It flicked its tail with a nervous sort of eagerness, as if every thought it had was trying to escape all at once.<br /><br />"What we do today shapes what comes next!" She said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/high_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/high_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/high_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/high_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/high_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/high_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/high_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 3 - slow-speaking character',
+          script: 'The old man moved like a clock winding down, his fingers tracing invisible patterns in the air before he spoke. Deep lines carved his face, each crease a reminder of a thought considered longer than necessary. When he finally met your gaze, his eyes held the weight of unspoken words, as if time itself bent around his pauses.<br /><br />"Some things are understood without being spoken!" He said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/slow_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/slow_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/slow_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/slow_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/slow_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/slow_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/slow_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 4 - fast-speaking character',
+          script: 'Her hands never stopped moving, flicking through pages, tucking stray hairs behind her ears, tapping impatient rhythms on the table. Her eyes darted from face to face, searching for the next gap in conversation before one had even opened. By the time you’d processed her last sentence, she was already three ideas ahead, halfway through explaining something new.<br /><br />"Some things are understood without being spoken!" She said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/fast_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/fast_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/fast_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/fast_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/fast_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/fast_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/fast_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 5 - loud/quiet character',
+          script: 'The moment he entered the room, everything else seemed quieter by comparison, the scrape of chairs, the murmur of voices, even the distant clatter of rain against the windows. His laughter hit like rolling thunder, his gestures wide enough to command attention from across the street. When he clapped you on the back, it felt less like a greeting and more like a declaration that you were now part of the show.<br /><br />"Time moves forward, whether we’re ready or not!" He said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/loud_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/loud_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/loud_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/loud_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/loud_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/loud_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/loud_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 6 - loud/quiet character',
+          script: 'She walked like a shadow slipping between the cracks of the world, her presence barely more than a breath against the air. If you weren’t paying attention, she would already be standing next to you, head tilted slightly as if she had been listening long before you even noticed. The corners of her lips curled in knowing amusement, as if she carried secrets meant only for those who bothered to lean in close.<br /><br />"Time moves forward, whether we’re ready or not!" She said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/quiet_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/quiet_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/quiet_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/quiet_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/quiet_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/quiet_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/quiet_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 7 - low-voiced character',
+          script: 'The giant’s chest rose and fell like the tide, steady and unhurried, his presence casting long shadows across the firelit hall. When he turned to look at you, it was slow, deliberate, like mountains shifting under their own weight. His lips barely moved when he spoke, as if his words were carved from stone rather than formed from breath.<br /><br />"Not every question has a simple answer!" He said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/low_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/low_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/low_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/low_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/low_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/low_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/low_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 8 - high-voiced character',
+          script: 'The little fox twitched its ears and bounced on its paws, its golden fur standing on end with excitement. Every movement was sharp and sudden, a creature wound too tight, barely able to contain its own energy. It flicked its tail with a nervous sort of eagerness, as if every thought it had was trying to escape all at once.<br /><br />"Not every question has a simple answer!" She said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/high_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/high_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/high_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/high_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/high_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/high_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/high_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 9 - slow-speaking character',
+          script: 'The old man moved like a clock winding down, his fingers tracing invisible patterns in the air before he spoke. Deep lines carved his face, each crease a reminder of a thought considered longer than necessary. When he finally met your gaze, his eyes held the weight of unspoken words, as if time itself bent around his pauses.<br /><br />"Time moves forward, whether we’re ready or not!" He said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/slow_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/slow_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/slow_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/slow_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/slow_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/slow_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/slow_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 10 - fast-speaking character',
+          script: 'Her hands never stopped moving, flicking through pages, tucking stray hairs behind her ears, tapping impatient rhythms on the table. Her eyes darted from face to face, searching for the next gap in conversation before one had even opened. By the time you’d processed her last sentence, she was already three ideas ahead, halfway through explaining something new.<br /><br />"Time moves forward, whether we’re ready or not!" She said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/fast_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/fast_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/fast_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/fast_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/fast_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/fast_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/fast_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 11 - loud/quiet character',
+          script: 'The moment he entered the room, everything else seemed quieter by comparison, the scrape of chairs, the murmur of voices, even the distant clatter of rain against the windows. His laughter hit like rolling thunder, his gestures wide enough to command attention from across the street. When he clapped you on the back, it felt less like a greeting and more like a declaration that you were now part of the show.<br /><br />"Some things are understood without being spoken!" He said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/loud_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/loud_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/loud_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/loud_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/loud_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/loud_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/loud_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 12 - loud/quiet character',
+          script: 'She walked like a shadow slipping between the cracks of the world, her presence barely more than a breath against the air. If you weren’t paying attention, she would already be standing next to you, head tilted slightly as if she had been listening long before you even noticed. The corners of her lips curled in knowing amusement, as if she carried secrets meant only for those who bothered to lean in close.<br /><br />"Some things are understood without being spoken!" She said.',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1d/quiet_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1d/quiet_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1d/quiet_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1d/quiet_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1d/quiet_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1d/quiet_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1d/quiet_F.wav' },
+          ],
+        },
+      ],
+      },
+      {
+        title: '3. Clarification',
+        sectionIntro: 'This section corresponds to <strong> Section 4.2.3 </strong> in the paper. Each script contains a dialogue between Tom and Jerry, where Tom made a statement, Jerry misunderstood a portion of the statement, and Tom repeated the statement to clarify. Pay attention to <strong> how different misunderstandings create different contrastive focus patterns in the clarification quote</strong>.',
+        demos: [
+        {
+          demoTitle: 'Demo 1 - misunderstanding in subject',
+          script: '"Isabella pushed the chair forcefully." Tom said. <br />"Did you say James pushed the chair forcefully?" Jerry asked, apparently not paying attention. <br />"No, I said Isabella pushed the chair forcefully!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Sub_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Sub_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Sub_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Sub_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Sub_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Sub_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Sub_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 2 - misunderstanding in verb',
+          script: '"Isabella pushed the chair forcefully." Tom said. <br />"Did you say Isabella dragged the chair forcefully?" Jerry asked, apparently not paying attention. <br />"No, I said Isabella pushed the chair forcefully!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Ver_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Ver_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Ver_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Ver_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Ver_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Ver_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Ver_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 3 - misunderstanding in object',
+          script: '"Isabella pushed the chair forcefully." Tom said. <br />"Did you say Isabella pushed the bookshelf forcefully?" Jerry asked, apparently not paying attention. <br />"No, I said Isabella pushed the chair forcefully!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Obj_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Obj_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Obj_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Obj_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Obj_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Obj_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Obj_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 4 - misunderstanding in adverbial',
+          script: '"Isabella pushed the chair forcefully." Tom said. <br />"Did you say Isabella pushed the chair halfheartedly?" Jerry asked, apparently not paying attention. <br />"No, I said Isabella pushed the chair forcefully!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Adv_M.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Adv_M.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Adv_M.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Adv_M.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Adv_M.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Adv_M.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Adv_M.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 5 - misunderstanding in subject',
+          script: '"Ava placed the candle on the shelf." Tom said. <br />"Did you say Henry placed the candle on the shelf?" Jerry asked, apparently not paying attention. <br />"No, I said Ava placed the candle on the shelf!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Sub_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Sub_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Sub_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Sub_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Sub_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Sub_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Sub_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 6 - misunderstanding in verb',
+          script: '"Ava placed the candle on the shelf." Tom said. <br />"Did you say Ava knocked over the candle on the shelf?" Jerry asked, apparently not paying attention. <br />"No, I said Ava placed the candle on the shelf!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Ver_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Ver_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Ver_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Ver_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Ver_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Ver_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Ver_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 7 - misunderstanding in object',
+          script: '"Ava placed the candle on the shelf." Tom said. <br />"Did you say Ava placed the figurine on the shelf?" Jerry asked, apparently not paying attention. <br />"No, I said Ava placed the candle on the shelf!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Obj_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Obj_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Obj_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Obj_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Obj_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Obj_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Obj_F.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 8 - misunderstanding in adverbial',
+          script: '"Ava placed the candle on the shelf." Tom said. <br />"Did you say Ava placed the candle on the windowsill?" Jerry asked, apparently not paying attention. <br />"No, I said Ava placed the candle on the shelf!"',
+          groupA: [
+            { name: 'StyleTTS2', src: './demo_files/styletts2/1b/Adv_F.wav' },
+            { name: 'MIMI-tok',  src: './demo_files/mimi/1b/Adv_F.wav' },
+            { name: 'GLM4V-tok', src: './demo_files/glm4v/1b/Adv_F.wav' },
+            { name: 'ProsodyLM', src: './demo_files/ours/1b/Adv_F.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio', src: './demo_files/stepaudio/1b/Adv_F.wav' },
+            { name: 'ElevenLabs', src: './demo_files/11labs/1b/Adv_F.wav' },
+            { name: 'GPT-4o',     src: './demo_files/gpt4o/1b/Adv_F.wav' },
+          ],
+        },
+      ],
+      },
+      {
+        title: '4. Audiobook Reading',
+        sectionIntro: 'This section corresponds to <strong> Section 4.2.3 </strong> in the paper. Each script is a short exerpt from novels not within the training set of Group-A baselines (but may appear in the training set of Group-B baselines). Pay attention to <strong> how the quotes of different characters are presented</strong>.',
+        demos: [
+        {
+          demoTitle: 'Demo 1',
+          script: '"Harry, you\'re a great wizard, you know." <br /> "I\'m not as good as you," said Harry, very embarrassed, as she let go of him. <br /> "Me!" said Hermione. "Books! And cleverness! There are more important things, friendship and bravery and, oh Harry, be careful!"',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/1.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/1.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/1.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/1.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/1.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/1.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/1.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 2',
+          script: '"I volunteer!" I gasp. "I volunteer as tribute!" <br /> There\'s some confusion on the stage. <br /> "Lovely!" says Effie Trinket. "But I believe there\'s a small matter of introducing the reaping winner and then asking for volunteers, and if one does come forth then we, um." <br /> "What does it matter?" says the mayor. He\'s looking at me with a pained expression on his face.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/2.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/2.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/2.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/2.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/2.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/2.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/2.wav' },
+          ],
+        },
+        {
+          demoTitle: 'Demo 3',
+          script: '"I don\'t need your help," Lisbeth snapped. <br /> Mikael sighed. "Maybe not. But sometimes, accepting help isn\'t a sign of weakness." <br /> She stared at him, her defenses wavering. In his eyes, she saw not pity, but understanding, a rare and disarming sight.',
+          groupA: [
+            { name: 'StyleTTS2',    src: './demo_files/styletts2/mturk/3.wav' },
+            { name: 'MIMI-tok',     src: './demo_files/mimi/mturk/3.wav' },
+            { name: 'GLM4V-tok',    src: './demo_files/glm4v/mturk/3.wav' },
+            { name: 'ProsodyLM',    src: './demo_files/ours/mturk/3.wav', highlight: true },
+          ],
+          groupB: [
+            { name: 'Step-Audio',   src: './demo_files/stepaudio/mturk/3.wav' },
+            { name: 'ElevenLabs',   src: './demo_files/11labs/mturk/3.wav' },
+            { name: 'GPT-4o',       src: './demo_files/gpt4o/mturk/3.wav' },
+          ],
+        },
+      ],
+
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('accordion-container');
+
+      // Build and insert all sections
+      accordionData.forEach(section => {
+        const demosHTML = section.demos
+          .map(demo => createDemoBlock(demo.demoTitle, demo.script, demo.groupA, demo.groupB))
+          .join('');
+
+        const sectionHTML = createAccordionSection(
+          section.title,
+          section.sectionIntro,
+          demosHTML
+        );
+        container.insertAdjacentHTML('beforeend', sectionHTML);
+      });
+
+      // Toggle logic for each accordion
+      const sections = document.querySelectorAll('.accordion-section');
+      sections.forEach(sec => {
+        const titleBar = sec.querySelector('.accordion-title');
+        const content = sec.querySelector('.accordion-content');
+
+        titleBar.addEventListener('click', () => {
+          // Toggle the 'open' class for styling (indicator rotation)
+          sec.classList.toggle('open');
+
+          if (sec.classList.contains('open')) {
+            // Expand: set content's maxHeight to its scrollHeight
+            content.style.maxHeight = content.scrollHeight + 'px';
+          } else {
+            // Collapse: set maxHeight to 0 for a smooth transition
+            content.style.maxHeight = '0px';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
