@@ -274,7 +274,7 @@
     </div>
 
     <p class="intro-text">
-      The following demos correspond to <b>Section 4</b> in the original paper, showcasing how SpeechCombine can generate appropriate output in <strong>text-oriented, speech understanding, and generation tasks</strong>.
+      The following demos correspond to <b>Section 4</b> in the original paper, showcasing how SpeechCombine can generate appropriate output in <strong>text-oriented, speech understanding, and generation tasks</strong>. However, we choose to present the tasks in a <b>reverse</b> order, as the generation task places greater emphasis on the model‘s expressiveness, which is the primary focus of the speech language model. In contrast, the other two tasks primarily evaluate accuracy-oriented capabilities.
     </p>
 
     <div id="accordion-container"></div>
@@ -345,156 +345,8 @@
     }
 
     const accordionData = [
-      {
-        title: '1. Text-Oriented Tasks',
-        sectionIntro: 'Text-oriented tasks refer to tasks that standard text LLMs can already accomplished, such as question answering, but here the input and output are in speech. <br>This section corresponds to <strong> Section 4.2 </strong> in the paper.',
-        subSections: [
-          {
-            title: 'Question Answering',
-        demos: [
-        {
-          title: 'Demo 1 (Question Answering)',
-                script: '"Can you tell me who was the famous scientist who developed the theory of relativity?"',
-                scriptAudio: './demo_files/question/relativity_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/relativity.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/relativity.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/relativity.wav' },
-            { name: 'SpeechCombine', src: './demo_files/ours/qa/relativity.wav', highlight: true },
-          ],
-              },
-              {
-          title: 'Demo 2 (Question Answering)',
-                script: '"Can you tell me which planet is known as the Red Planet?"',
-                scriptAudio: './demo_files/question/red_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/red.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/red.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/red.wav' },
-            { name: 'SpeechCombine', src: './demo_files/ours/qa/red.wav', highlight: true },
-          ],
-              },
-              {
-          title: 'Demo 3 (Question Answering)',
-                script: '"What’s the largest planet in our solar system?"',
-                scriptAudio: './demo_files/question/largest_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/largest.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/largest.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/largest.wav' },
-            { name: 'SpeechCombine', src: './demo_files/ours/qa/largest.wav', highlight: true },
-          ],
-              },
-              {
-          title: 'Demo 4 (Question Answering)',
-                script: '"Who was the first president of the United States?"',
-                scriptAudio: './demo_files/question/us_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/us.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/us.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/us.wav' },
-            { name: 'SpeechCombine', src: './demo_files/ours/qa/us.wav', highlight: true },
-          ],
-              },
-              {
-          title: 'Demo 5 (Question Answering)',
-                script: '"Can you tell me which ocean is the largest? "',
-                scriptAudio: './demo_files/question/ocean_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/ocean.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/ocean.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/ocean.wav' },
-            { name: 'SpeechCombine', src: './demo_files/ours/qa/ocean.wav', highlight: true },
-          ],
-              },
-            ]
-          },
-        ]
-      },
-      {
-        title: '2. Speech Understanding Tasks',
-        sectionIntro: 'Speech understanding tasks refer to tasks that query information from input speech utterances, particularly paralinguistic attributes such as emotion or emphasis. <br>This section corresponds to <strong> Section 4.3 </strong> in the paper.',
-        subSections: [
-          {
-            title: 'Emphasis Understanding',
-        demos: [
-        {
-          title: 'Demo 1 (Emphasis Understanding)',
-                script: "\"But I think that'll make us more attractive.\" Which word(s) in the audio clip are emphasized?",
-                scriptAudio: './demo_files/question/more_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/more.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/more.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/more.wav' },
-                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/more.wav', highlight: true },
-          ],
-              },
-              {
-          title: 'Demo 2 (Emphasis Understanding)',
-                script: "\"Did you forget your password?\" Which word(s) in the audio clip are emphasized?",
-                scriptAudio: './demo_files/question/password_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/password.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/password.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/password.wav' },
-                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/password.wav', highlight: true },
-          ],
-              },
-              {
-          title: 'Demo 3 (Emphasis Understanding)',
-                script: "\"Does she think I should get that job?\" Which word(s) in the audio clip are emphasized?",
-                scriptAudio: './demo_files/question/job_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/job.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/job.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/job.wav' },
-                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/job.wav', highlight: true },
-          ],
-              },
-            ]
-          },
-          {
-            title: 'Emotion Understanding',
-            demos: [
-              {
-                title: 'Demo 4 (Emotion Understanding)',
-                script: "Hey, do you think I’ll be able to finish this on time? How am I feeling now?",
-                scriptAudio: './demo_files/question/finish_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/finish.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/finish.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/finish.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/finish.wav', highlight: true },
-                ],
-              },
-              {
-                title: 'Demo 5 (Emotion Understanding)',
-                script: "Wow, that was awesome! How did you do that? How am I feeling now?",
-                scriptAudio: './demo_files/question/awesome_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/awesome.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/awesome.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/awesome.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/awesome.wav', highlight: true },
-                ],
-              },
-              {
-                title: 'Demo 6 (Emotion Understanding)',
-                script: "Can we please just take a break already? How am I feeling now?",
-                scriptAudio: './demo_files/question/break_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/break.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/break.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/break.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/break.wav', highlight: true },
-                ],
-              },
-            ]
-          },
-        ]
-      },
-      {
-        title: '3. Speech Generation Tasks', 
+    {
+        title: '1. Speech Generation Tasks', 
         sectionIntro: 'Speech generation tasks refer to tasks that require generating speech utterances subject to specific constrainsts, such as emotion or emphasized words. <br>This section corresponds to <strong> Section 4.4 </strong> in the paper. Each example contains a TTS instruction. Pay attention to <strong>how the instruction affects the prosody of the statement</strong>.',
         subSections: [
           {
@@ -587,6 +439,154 @@
           ],
         },
       ]
+          },
+        ]
+      },
+      {
+        title: '2. Speech Understanding Tasks',
+        sectionIntro: 'Speech understanding tasks refer to tasks that query information from input speech utterances, particularly paralinguistic attributes such as emotion or emphasis. <br>This section corresponds to <strong> Section 4.3 </strong> in the paper.',
+        subSections: [
+          {
+            title: 'Emphasis Understanding',
+        demos: [
+        {
+          title: 'Demo 1 (Emphasis Understanding)',
+                script: "\"But I think that'll make us more attractive.\" Which word(s) in the audio clip are emphasized?",
+                scriptAudio: './demo_files/question/more_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/more.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/more.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/more.wav' },
+                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/more.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 2 (Emphasis Understanding)',
+                script: "\"Did you forget your password?\" Which word(s) in the audio clip are emphasized?",
+                scriptAudio: './demo_files/question/password_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/password.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/password.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/password.wav' },
+                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/password.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 3 (Emphasis Understanding)',
+                script: "\"Does she think I should get that job?\" Which word(s) in the audio clip are emphasized?",
+                scriptAudio: './demo_files/question/job_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/job.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/job.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/job.wav' },
+                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/job.wav', highlight: true },
+          ],
+              },
+            ]
+          },
+          {
+            title: 'Emotion Understanding',
+            demos: [
+              {
+                title: 'Demo 4 (Emotion Understanding)',
+                script: "Hey, do you think I’ll be able to finish this on time? How am I feeling now?",
+                scriptAudio: './demo_files/question/finish_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/finish.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/finish.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/finish.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/finish.wav', highlight: true },
+                ],
+              },
+              {
+                title: 'Demo 5 (Emotion Understanding)',
+                script: "Wow, that was awesome! How did you do that? How am I feeling now?",
+                scriptAudio: './demo_files/question/awesome_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/awesome.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/awesome.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/awesome.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/awesome.wav', highlight: true },
+                ],
+              },
+              {
+                title: 'Demo 6 (Emotion Understanding)',
+                script: "Can we please just take a break already? How am I feeling now?",
+                scriptAudio: './demo_files/question/break_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/break.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/break.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/break.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/break.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+        ]
+      },
+      {
+        title: '3. Text-Oriented Tasks',
+        sectionIntro: 'Text-oriented tasks refer to tasks that standard text LLMs can already accomplished, such as question answering, but here the input and output are in speech. <br>This section corresponds to <strong> Section 4.2 </strong> in the paper.',
+        subSections: [
+          {
+            title: 'Question Answering',
+        demos: [
+        {
+          title: 'Demo 1 (Question Answering)',
+                script: '"Can you tell me who was the famous scientist who developed the theory of relativity?"',
+                scriptAudio: './demo_files/question/relativity_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/relativity.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/relativity.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/relativity.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/relativity.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 2 (Question Answering)',
+                script: '"Can you tell me which planet is known as the Red Planet?"',
+                scriptAudio: './demo_files/question/red_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/red.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/red.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/red.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/red.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 3 (Question Answering)',
+                script: '"What’s the largest planet in our solar system?"',
+                scriptAudio: './demo_files/question/largest_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/largest.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/largest.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/largest.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/largest.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 4 (Question Answering)',
+                script: '"Who was the first president of the United States?"',
+                scriptAudio: './demo_files/question/us_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/us.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/us.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/us.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/us.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 5 (Question Answering)',
+                script: '"Can you tell me which ocean is the largest? "',
+                scriptAudio: './demo_files/question/ocean_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/ocean.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/ocean.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/ocean.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/ocean.wav', highlight: true },
+          ],
+              },
+            ]
           },
         ]
       },
