@@ -274,7 +274,7 @@
     </div>
 
     <p class="intro-text">
-      The following demos correspond to <b>Section 4</b> in the original paper, showcasing how SpeechCombine can generate appropriate output in <strong>text-oriented, speech understanding, and generation tasks</strong>. However, we choose to present the tasks in a <b>reverse</b> order, as the generation task places greater emphasis on the model‘s expressiveness, which is the primary focus of the speech language model. In contrast, the other two tasks primarily evaluate accuracy-oriented capabilities.
+      The following demos correspond to <b>Section 4</b> in the original paper, showcasing how SpeechCombine can generate appropriate output in <strong>text-oriented, speech understanding, and generation tasks</strong>. However, we choose to present the tasks in a <b>reverse</b> order, since the generation task is evaluated primarily based on the expressiveness of the output, where subjective perception plays a central role in assessing speech generation quality. In contrast, the other two tasks primarily evaluate accuracy-oriented capabilities.
     </p>
 
     <div id="accordion-container"></div>
@@ -381,22 +381,6 @@
             demos: [
               {
                 title: 'Demo 3 (Emphasis Generation)',
-                script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: that\"',
-                scriptAudio: './demo_files/question/that_question.wav',
-                groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/that.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/that.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/that.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/that.wav', highlight: true },
-                ],
-              },
-            ]
-          },
-          {
-            title: 'Emphasis Generation',
-            demos: [
-              {
-                title: 'Demo 4 (Emphasis Generation)',
                 script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: think\"',
                 scriptAudio: './demo_files/question/think_question.wav',
                 groupA: [
