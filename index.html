@@ -393,10 +393,26 @@
             ]
           },
           {
+            title: 'Emphasis Generation',
+            demos: [
+              {
+                title: 'Demo 4 (Emphasis Generation)',
+                script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: think\"',
+                scriptAudio: './demo_files/question/think_question.wav',
+                groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/think.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/think.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/think.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/think.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
             title: 'Emotion Generation',
             demos: [
               {
-                title: 'Demo 4 (Emotion Generation)',
+                title: 'Demo 5 (Emotion Generation)',
                 script: '\"Read the following sentence with a happy tone: \'Wow, this is the best day ever!\'"',
                 scriptAudio: './demo_files/question/happy_question.wav',
           groupA: [
@@ -412,7 +428,7 @@
             title: 'Emotion Generation',
             demos: [
               {
-                title: 'Demo 5 (Emotion Generation)',
+                title: 'Demo 6 (Emotion Generation)',
                 script: '"Read the following sentence with a sad tone: \'It\u2019s hard to say goodbye...\'"',
                 scriptAudio: './demo_files/question/sad_question.wav',
           groupA: [
@@ -428,7 +444,7 @@
             title: 'Emotion Generation',
             demos: [
               {
-                title: 'Demo 6 (Emotion Generation)',
+                title: 'Demo 7 (Emotion Generation)',
                 script: "\"Read the following sentence with a surprised tone: \'Wait, you actually remembered our anniversary?\'\"",
                 scriptAudio: './demo_files/question/surprised_question.wav',
           groupA: [
