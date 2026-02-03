@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Ensures responsiveness on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpeechCombine Audio Demo</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+    /* Base styling */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      color: #333;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1em;
+    }
+
+    h1.page-title {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 0.5em;
+      line-height: 1.2;
+    }
+
+    .teal-text {
+      color: #7BBDB6; /* Teal highlight */
+    }
+
+    .intro-text {
+      margin-bottom: 1.5em;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    figure {
+      margin: 0 auto 2em auto;
+      text-align: center;
+    }
+
+    figure img {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .gif-crop {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      overflow: visible;
+      position: relative;
+      text-align: center;
+    }
+
+    .gif-crop img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      display: inline-block;
+    }
+
+
+
+    /* Bullet list for Group A/B with teal markers */
+    .baselines-list {
+      margin-left: 0em;
+      list-style-type: disc;
+      margin-bottom: 1.5em; /* spacing below the list */
+      font-size: 1.1em;
+      color: #555;
+    }
+    .baselines-list li::marker {
+      color: #11616b; /* Teal bullet points */
+    }
+
+    /* Accordion styling */
+    .accordion-section {
+      margin-bottom: 1.5em;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    .accordion-title {
+      background: #11616b;
+      color: #fff;
+      padding: 0.75em 1em;
+      font-weight: 700;
+      font-size: 1.2em;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      position: sticky;
+      top: 0;         /* Sticky at the top of the accordion content */
+      z-index: 1;     /* Ensure it's above the scrolling content */
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .accordion-title:hover {
+      background-color: #082e34;
+    }
+
+    .accordion-indicator {
+      font-size: 1.4em;
+      margin-left: 1em;
+      transition: transform 0.3s ease;
+    }
+
+    /* Rotate the indicator when open */
+    .accordion-section.open > .accordion-title .accordion-indicator {
+      transform: rotate(45deg);
+    }
+
+    /* Accordion content with animation */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+    }
+
+    .accordion-section.open > .accordion-content {
+      max-height: 5000px;
+      overflow: visible;
+    }
+
+    .accordion-inner {
+      font-size: 1.1em;
+      font-weight: 500;
+      padding: 1em;
+      background: #fff;
+    }
+
+
+    /* Demo blocks */
+    .demo-block {
+      margin: 0.75em 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .demo-header {
+      background: #7BBDB6;
+      color: #fff;
+      padding: 0.5em 1em;
+      font-weight: 900;
+      font-size: 1em;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .demo-script {
+      background: #fff;
+      padding: 0.75em 1em;
+      border-top: 1px solid #ccc;
+
+      display: flex;
+      align-items: center;    /* Centers vertically */
+      justify-content: center; /* Centers horizontally */
+      min-height: 100px;          /* Example height; adjust as needed */
+      text-align: center;      /* Optionally center the text itself */
+      background-color: #fff;  /* Or any other styling */
+    }
+
+    /* Inner wrapper with left-aligned text. */
+    .demo-script .script-content {
+      font-size: 1.0em;
+      text-align: left;
+      max-width: 80%; /* optional: limit line width */
+    }
+
+    .script-audio {
+      margin-top: 1em;
+    }
+
+    .script-audio audio {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .section-label {
+      display: block;
+      font-size: 0.95em;
+      color: #333;
+      margin-bottom: 0.5em;
+    }
+
+    .instruction-label {
+      font-size: 1.0em;
+      color: #333;
+    }
+
+    .demo-group-a {
+      background: #EBF4F8;
+      padding: 0.75em 1em;
+      border-top: 1px solid #ccc;
+    }
+
+    .demo-group-b {
+      background: #f0f0f0;
+      padding: 0.75em 1em;
+      border-top: 1px solid #ccc;
+    }
+
+    .playback-row {
+      margin-top: 0.5em;
+    }
+
+    .playback-row-line {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5em;
+    }
+
+    .method-label {
+      min-width: 160px;
+      font-weight: 300;
+      color: #333;
+      margin-right: 0.5em;
+      white-space: nowrap;
+    }
+
+    .primary-approach {
+      color: #11616b;
+      font-weight: 700;
+      /* text-decoration: underline; */
+    }
+
+    audio {
+      vertical-align: middle;
+      margin-right: 1em;
+    }
+
+    @media (max-width: 600px) {
+      .page-title {
+        font-size: 1.8em;
+      }
+      .accordion-title {
+        font-size: 1.1em;
+      }
+      .method-label {
+        min-width: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-title">
+      Unlocking Speech–Text Compositional Powers: Instruction-Following Speech Language Models without Instruction Tuning - <span class="teal-text">Audio Demo</span>
+    </h1>
+
+    <p class="intro-text">
+      This webpage shows some audio examples for <b>SpeechCombine</b>, an instruction-following speech language model trained without any instruction tuning, using only a <b>single round</b> of speech pre-training on <b>30k</b> hours of data. 
+    </p>
+
+    <div class="gif-crop">
+      <!-- Insert your actual GIF path -->
+      <img src="./animation1.gif" alt="Overall framework" />
+    </div>
+
+    <p class="intro-text">
+      The following demos correspond to <b>Section 4</b> in the original paper, showcasing how SpeechCombine can generate appropriate output in <strong>text-oriented, speech understanding, and generation tasks</strong>.
+    </p>
+
+    <div id="accordion-container"></div>
+  </div>
+
+  <script>
+    // Create individual method row
+    function createMethodRow(methodName, audioSrc, highlight=false) {
+      const highlightClass = highlight ? 'primary-approach' : '';
+      return `
+        <div class="playback-row-line">
+          <span class="method-label ${highlightClass}">${methodName}:</span>
+          <audio controls>
+            <source src="${audioSrc}" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      `;
+    }
+
+    // Create one demo block (innermost level)
+    function createDemoBlock(demoTitle, scriptText, groupA, scriptAudio) {
+      const groupARows = groupA ? groupA.map(m =>
+        createMethodRow(m.name, m.src, m.highlight)).join('') : '';
+
+      // Optional audio player for the script/prompt
+      const scriptAudioHTML = scriptAudio ? `
+        <div class="script-audio">
+          <audio controls>
+            <source src="${scriptAudio}" type="audio/mpeg" />
+          </audio>
+        </div>
+      ` : '';
+
+      return `
+        <div class="demo-block">
+          <div class="demo-header">${demoTitle}</div>
+          <div class="demo-script">
+            <div class="script-content">
+              <b class="instruction-label">Instruction: </b><i>${scriptText}</i>
+              ${scriptAudioHTML}
+            </div>
+          </div>
+          <div class="demo-group-a">
+            <b class="section-label">Answers:</b>
+            <div class="playback-row">${groupARows}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Create main accordion section (top level)
+    function createAccordionSection(title, sectionIntro, subSectionsHTML) {
+      return `
+        <div class="accordion-section">
+          <h2 class="accordion-title">
+            ${title}
+            <span class="accordion-indicator">+</span>
+          </h2>
+          <div class="accordion-content">
+            <div class="accordion-inner">
+              <p>${sectionIntro}</p>
+              ${subSectionsHTML}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const accordionData = [
+      {
+        title: '1. Text-Oriented Tasks',
+        sectionIntro: 'Text-oriented tasks refer to tasks that standard text LLMs can already accomplished, such as question answering, but here the input and output are in speech. <br>This section corresponds to <strong> Section 4.2 </strong> in the paper.',
+        subSections: [
+          {
+            title: 'Question Answering',
+        demos: [
+        {
+          title: 'Demo 1 (Question Answering)',
+                script: '"Can you tell me who was the famous scientist who developed the theory of relativity?"',
+                scriptAudio: './demo_files/question/relativity_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/relativity.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/relativity.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/relativity.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/relativity.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 2 (Question Answering)',
+                script: '"Can you tell me which planet is known as the Red Planet?"',
+                scriptAudio: './demo_files/question/red_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/red.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/red.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/red.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/red.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 3 (Question Answering)',
+                script: '"What’s the largest planet in our solar system?"',
+                scriptAudio: './demo_files/question/largest_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/largest.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/largest.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/largest.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/largest.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 4 (Question Answering)',
+                script: '"Who was the first president of the United States?"',
+                scriptAudio: './demo_files/question/us_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/us.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/us.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/us.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/us.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 5 (Question Answering)',
+                script: '"Can you tell me which ocean is the largest? "',
+                scriptAudio: './demo_files/question/ocean_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/ocean.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/ocean.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/ocean.wav' },
+            { name: 'SpeechCombine', src: './demo_files/ours/qa/ocean.wav', highlight: true },
+          ],
+              },
+            ]
+          },
+        ]
+      },
+      {
+        title: '2. Speech Understanding Tasks',
+        sectionIntro: 'Speech understanding tasks refer to tasks that query information from input speech utterances, particularly paralinguistic attributes such as emotion or emphasis. <br>This section corresponds to <strong> Section 4.3 </strong> in the paper.',
+        subSections: [
+          {
+            title: 'Emphasis Understanding',
+        demos: [
+        {
+          title: 'Demo 1 (Emphasis Understanding)',
+                script: "\"But I think that'll make us more attractive.\" Which word(s) in the audio clip are emphasized?",
+                scriptAudio: './demo_files/question/more_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/more.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/more.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/more.wav' },
+                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/more.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 2 (Emphasis Understanding)',
+                script: "\"Did you forget your password?\" Which word(s) in the audio clip are emphasized?",
+                scriptAudio: './demo_files/question/password_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/password.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/password.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/password.wav' },
+                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/password.wav', highlight: true },
+          ],
+              },
+              {
+          title: 'Demo 3 (Emphasis Understanding)',
+                script: "\"Does she think I should get that job?\" Which word(s) in the audio clip are emphasized?",
+                scriptAudio: './demo_files/question/job_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/job.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/job.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/job.wav' },
+                { name: 'SpeechCombine', src: './demo_files/ours/emphasis_under/job.wav', highlight: true },
+          ],
+              },
+            ]
+          },
+          {
+            title: 'Emotion Understanding',
+            demos: [
+              {
+                title: 'Demo 4 (Emotion Understanding)',
+                script: "Hey, do you think I’ll be able to finish this on time? How am I feeling now?",
+                scriptAudio: './demo_files/question/finish_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/finish.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/finish.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/finish.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/finish.wav', highlight: true },
+                ],
+              },
+              {
+                title: 'Demo 5 (Emotion Understanding)',
+                script: "Wow, that was awesome! How did you do that? How am I feeling now?",
+                scriptAudio: './demo_files/question/awesome_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/awesome.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/awesome.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/awesome.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/awesome.wav', highlight: true },
+                ],
+              },
+              {
+                title: 'Demo 6 (Emotion Understanding)',
+                script: "Can we please just take a break already? How am I feeling now?",
+                scriptAudio: './demo_files/question/break_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/break.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/break.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/break.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/break.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+        ]
+      },
+      {
+        title: '3. Speech Generation Tasks', 
+        sectionIntro: 'Speech generation tasks refer to tasks that require generating speech utterances subject to specific constrainsts, such as emotion or emphasized words. <br>This section corresponds to <strong> Section 4.4 </strong> in the paper. Each example contains a TTS instruction. Pay attention to <strong>how the instruction affects the prosody of the statement</strong>.',
+        subSections: [
+          {
+            title: 'Emphasis Generation',
+        demos: [
+        {
+          title: 'Demo 1 (Emphasis Generation)',
+          script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: she\"',
+          scriptAudio: './demo_files/question/she_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/she.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/she.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/she.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/she.wav', highlight: true },
+          ],
+        },
+        {
+          title: 'Demo 2 (Emphasis Generation)',
+          script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: should\"',
+          scriptAudio: './demo_files/question/should_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/should.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/should.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/should.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/should.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
+            title: 'Emphasis Generation',
+            demos: [
+              {
+                title: 'Demo 3 (Emphasis Generation)',
+                script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: that\"',
+                scriptAudio: './demo_files/question/that_question.wav',
+                groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/that.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/that.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/that.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/that.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
+            title: 'Emotion Generation',
+            demos: [
+              {
+                title: 'Demo 4 (Emotion Generation)',
+                script: '\"Read the following sentence with a happy tone: \'Wow, this is the best day ever!\'"',
+                scriptAudio: './demo_files/question/happy_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/happy.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/happy.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/happy.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_gen/happy.wav', highlight: true },
+          ],
+        },
+      ]
+          },
+          {
+            title: 'Emotion Generation',
+            demos: [
+              {
+                title: 'Demo 5 (Emotion Generation)',
+                script: '"Read the following sentence with a sad tone: \'It\u2019s hard to say goodbye...\'"',
+                scriptAudio: './demo_files/question/sad_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/sad.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/sad.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/sad.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_gen/sad.wav', highlight: true },
+          ],
+        },
+      ]
+          },
+          {
+            title: 'Emotion Generation',
+            demos: [
+              {
+                title: 'Demo 6 (Emotion Generation)',
+                script: "\"Read the following sentence with a surprised tone: \'Wait, you actually remembered our anniversary?\'\"",
+                scriptAudio: './demo_files/question/surprised_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/surprised.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/surprised.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/surprised.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_gen/surprised.wav', highlight: true },
+          ],
+        },
+      ]
+          },
+        ]
+      },
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('accordion-container');
+
+      // Build and insert all sections
+      accordionData.forEach((section, idx) => {
+        // Flatten all demos from all sub-sections
+        const allDemos = section.subSections.flatMap(sub => sub.demos);
+        const subSectionsHTML = allDemos.map((demo, index) => 
+          createDemoBlock(demo.title || `Demo ${index + 1}`, demo.script, demo.groupA, demo.scriptAudio)
+        ).join('');
+
+        const sectionHTML = createAccordionSection(
+          section.title,
+          section.sectionIntro,
+          subSectionsHTML
+        );
+        container.insertAdjacentHTML('beforeend', sectionHTML);
+      });
+
+      // Toggle logic for main accordion
+      const sections = document.querySelectorAll('.accordion-section');
+      sections.forEach(sec => {
+        const titleBar = sec.querySelector('.accordion-title');
+
+        titleBar.addEventListener('click', () => {
+          sec.classList.toggle('open');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
