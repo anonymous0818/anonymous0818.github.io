@@ -350,53 +350,10 @@
         sectionIntro: 'Speech generation tasks refer to tasks that require generating speech utterances subject to specific constrainsts, such as emotion or emphasized words. <br>This section corresponds to <strong> Section 4.4 </strong> in the paper. Each example contains a TTS instruction. Pay attention to <strong>how the instruction affects the prosody of the statement</strong>.',
         subSections: [
           {
-            title: 'Emphasis Generation',
-        demos: [
-        {
-          title: 'Demo 1 (Emphasis Generation)',
-          script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: she\"',
-          scriptAudio: './demo_files/question/she_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/she.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/she.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/she.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/she.wav', highlight: true },
-          ],
-        },
-        {
-          title: 'Demo 2 (Emphasis Generation)',
-          script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: should\"',
-          scriptAudio: './demo_files/question/should_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/should.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/should.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/should.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/should.wav', highlight: true },
-                ],
-              },
-            ]
-          },
-          {
-            title: 'Emphasis Generation',
-            demos: [
-              {
-                title: 'Demo 3 (Emphasis Generation)',
-                script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: think\"',
-                scriptAudio: './demo_files/question/think_question.wav',
-                groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/think.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/think.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/think.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/think.wav', highlight: true },
-                ],
-              },
-            ]
-          },
-          {
             title: 'Emotion Generation',
             demos: [
               {
-                title: 'Demo 5 (Emotion Generation)',
+                title: 'Demo 1 (Emotion Generation)',
                 script: '\"Read the following sentence with a happy tone: \'Wow, this is the best day ever!\'"',
                 scriptAudio: './demo_files/question/happy_question.wav',
           groupA: [
@@ -412,7 +369,7 @@
             title: 'Emotion Generation',
             demos: [
               {
-                title: 'Demo 6 (Emotion Generation)',
+                title: 'Demo 2 (Emotion Generation)',
                 script: '"Read the following sentence with a sad tone: \'It\u2019s hard to say goodbye...\'"',
                 scriptAudio: './demo_files/question/sad_question.wav',
           groupA: [
@@ -428,7 +385,7 @@
             title: 'Emotion Generation',
             demos: [
               {
-                title: 'Demo 7 (Emotion Generation)',
+                title: 'Demo 3 (Emotion Generation)',
                 script: "\"Read the following sentence with a surprised tone: \'Wait, you actually remembered our anniversary?\'\"",
                 scriptAudio: './demo_files/question/surprised_question.wav',
           groupA: [
@@ -440,6 +397,65 @@
         },
       ]
           },
+                    {
+            title: 'Emphasis Generation',
+        demos: [
+        {
+          title: 'Demo 4 (Emphasis Generation)',
+          script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: she\"',
+          scriptAudio: './demo_files/question/she_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/she.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/she.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/she.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/she.wav', highlight: true },
+          ],
+        },
+        {
+          title: 'Demo 5 (Emphasis Generation)',
+          script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: should\"',
+          scriptAudio: './demo_files/question/should_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/should.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/should.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/should.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/should.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
+            title: 'Emphasis Generation',
+            demos: [
+              {
+                title: 'Demo 6 (Emphasis Generation)',
+                script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: think\"',
+                scriptAudio: './demo_files/question/think_question.wav',
+                groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/think.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/think.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/think.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/think.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
+            title: 'Emphasis Generation',
+            demos: [
+              {
+                title: 'Demo 7 (Emphasis Generation)',
+                script: '\"Please read the sentence: \"does she think I should get that job?\" with emphasis on the word: that\"',
+                scriptAudio: './demo_files/question/that_question.wav',
+                groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/that.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/that.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/that.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emphasis_gen/that.wav', highlight: true },
+                ],
+              },
+            ]
+          },
         ]
       },
       {
@@ -447,10 +463,46 @@
         sectionIntro: 'Speech understanding tasks refer to tasks that query information from input speech utterances, particularly paralinguistic attributes such as emotion or emphasis. <br>This section corresponds to <strong> Section 4.3 </strong> in the paper.',
         subSections: [
           {
+            title: 'Emotion Understanding',
+            demos: [
+              {
+                title: 'Demo 1 (Emotion Understanding)',
+                script: "Hey, do you think I’ll be able to finish this on time? How am I feeling now?",
+                scriptAudio: './demo_files/question/finish_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/finish.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/finish.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/finish.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/finish.wav', highlight: true },
+                ],
+              },
+              {
+                title: 'Demo 2 (Emotion Understanding)',
+                script: "Wow, that was awesome! How did you do that? How am I feeling now?",
+                scriptAudio: './demo_files/question/awesome_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/awesome.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/awesome.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/awesome.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/awesome.wav', highlight: true },
+                ],
+              },
+              {
+                title: 'Demo 3 (Emotion Understanding)',
+                script: "Can we please just take a break already? How am I feeling now?",
+                scriptAudio: './demo_files/question/break_question.wav',
+          groupA: [
+                  { name: 'Kimi-Audio', src: './demo_files/kimi/break.wav' },
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/break.wav' },
+                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/break.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/break.wav', highlight: true },
+                ],
+              },
+              {
             title: 'Emphasis Understanding',
         demos: [
         {
-          title: 'Demo 1 (Emphasis Understanding)',
+          title: 'Demo 4 (Emphasis Understanding)',
                 script: "\"But I think that'll make us more attractive.\" Which word(s) in the audio clip are emphasized?",
                 scriptAudio: './demo_files/question/more_question.wav',
           groupA: [
@@ -461,7 +513,7 @@
           ],
               },
               {
-          title: 'Demo 2 (Emphasis Understanding)',
+          title: 'Demo 5 (Emphasis Understanding)',
                 script: "\"Did you forget your password?\" Which word(s) in the audio clip are emphasized?",
                 scriptAudio: './demo_files/question/password_question.wav',
           groupA: [
@@ -472,7 +524,7 @@
           ],
               },
               {
-          title: 'Demo 3 (Emphasis Understanding)',
+          title: 'Demo 6 (Emphasis Understanding)',
                 script: "\"Does she think I should get that job?\" Which word(s) in the audio clip are emphasized?",
                 scriptAudio: './demo_files/question/job_question.wav',
           groupA: [
@@ -484,42 +536,6 @@
               },
             ]
           },
-          {
-            title: 'Emotion Understanding',
-            demos: [
-              {
-                title: 'Demo 4 (Emotion Understanding)',
-                script: "Hey, do you think I’ll be able to finish this on time? How am I feeling now?",
-                scriptAudio: './demo_files/question/finish_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/finish.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/finish.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/finish.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/finish.wav', highlight: true },
-                ],
-              },
-              {
-                title: 'Demo 5 (Emotion Understanding)',
-                script: "Wow, that was awesome! How did you do that? How am I feeling now?",
-                scriptAudio: './demo_files/question/awesome_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/awesome.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/awesome.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/awesome.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/awesome.wav', highlight: true },
-                ],
-              },
-              {
-                title: 'Demo 6 (Emotion Understanding)',
-                script: "Can we please just take a break already? How am I feeling now?",
-                scriptAudio: './demo_files/question/break_question.wav',
-          groupA: [
-                  { name: 'Kimi-Audio', src: './demo_files/kimi/break.wav' },
-                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/break.wav' },
-                  { name: 'GLM-4-Voice', src: './demo_files/glm4voice/break.wav' },
-                  { name: 'SpeechCombine', src: './demo_files/ours/emotion_under/break.wav', highlight: true },
-                ],
-              },
             ]
           },
         ]
