@@ -245,6 +245,35 @@
       margin-right: 1em;
     }
 
+    /* Multi-Round Interaction Tab Styles */
+    .accordion-section.multi-round > .accordion-title {
+      background: #a6644e;
+    }
+
+    .accordion-section.multi-round > .accordion-title:hover {
+      background: #643f33;
+    }
+
+    .accordion-section.multi-round .demo-header {
+      background: #DC8B70;
+    }
+
+    .accordion-section.multi-round .demo-group-a {
+      background: #FED9CD;
+    }
+
+    .accordion-section.multi-round .primary-approach {
+      color: #a6644e;
+    }
+
+    .query-item {
+      margin-bottom: 1em;
+    }
+
+    .query-item:last-child {
+      margin-bottom: 0;
+    }
+
     @media (max-width: 600px) {
       .page-title {
         font-size: 1.8em;
@@ -326,10 +355,47 @@
       `;
     }
 
-    // Create main accordion section (top level)
-    function createAccordionSection(title, sectionIntro, subSectionsHTML) {
+    // Create a multi-round demo block with multiple queries
+    function createMultiRoundDemoBlock(demoTitle, queries, groupA) {
+      const groupARows = groupA ? groupA.map(m =>
+        createMethodRow(m.name, m.src, m.highlight)).join('') : '';
+
+      const queriesHTML = queries.map((q, idx) => {
+        const audioHTML = q.audio ? `
+          <div class="script-audio">
+            <audio controls>
+              <source src="${q.audio}" type="audio/mpeg" />
+            </audio>
+          </div>
+        ` : '';
+        return `
+          <div class="query-item">
+            <b class="instruction-label">Query ${idx + 1}: </b><i>${q.text}</i>
+            ${audioHTML}
+          </div>
+        `;
+      }).join('');
+
       return `
-        <div class="accordion-section">
+        <div class="demo-block">
+          <div class="demo-header">${demoTitle}</div>
+          <div class="demo-script">
+            <div class="script-content">
+              ${queriesHTML}
+            </div>
+          </div>
+          <div class="demo-group-a">
+            <b class="section-label">Answers:</b>
+            <div class="playback-row">${groupARows}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Create main accordion section (top level)
+    function createAccordionSection(title, sectionIntro, subSectionsHTML, extraClass = '') {
+      return `
+        <div class="accordion-section ${extraClass}">
           <h2 class="accordion-title">
             ${title}
             <span class="accordion-indicator">+</span>
@@ -606,6 +672,65 @@
           },
         ]
       },
+      {
+        title: '4. Multi-Round Interaction',
+        sectionIntro: 'In addition to the experiments presented in the main paper, we add another experiment where we challenge the SLMs with <b>multi-round interactions</b>. The goal is to test whether the SLMs can leverage the three types of capabilities flexibly in a more interactive setting.<br>In particular, we prompt Gemini to generate groups of three consecutive, interconnected queries. Each group of queries presents a drastic turn in the user\'s situation, and tests whether the SLM can handle the complex situations.',
+        extraClass: 'multi-round',
+        isMultiRound: true,
+        subSections: [
+          {
+            title: 'Multi-Round Conversation',
+            demos: [
+              {
+                title: 'Demo 1',
+                queries: [
+                  { text: 'The mechanic said my car is finally fixed and ready for pickup!' },
+                  { text: 'He just called back. The lift broke and my car fell. It’s a total loss.' },
+                  { text: 'Since the damage happened at the shop, does their insurance cover the replacement value or just the repair cost?' },
+                ],
+                groupA: [
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/multi_round.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/interactive/car.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
+            title: 'Multi-Round Conversation',
+            demos: [
+              {
+                title: 'Demo 2',
+                queries: [
+                  { text: "I have great news! I finally got the job I wanted!" },
+                  { text: "Oh wait... I just checked my email again. They said they made a mistake. I didn't get it." },
+                  { text: "They said it's a 'headcount issue.' What does that actually mean in HR terms?" },
+                ],
+                groupA: [
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/multi_round.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/interactive/job.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+          {
+            title: 'Multi-Round Conversation',
+            demos: [
+              {
+                title: 'Demo 3',
+                queries: [
+                  { text: "I made it to the gate just in time! The doors are still open." },
+                  { text: "Never mind... the flight was just cancelled while I was standing in line." },
+                  { text: "The agent said it was a 'crew timed out' error. Is that different from a weather delay?" },
+                ],
+                groupA: [
+                  { name: 'Fun-Audio-Chat', src: './demo_files/fun_audio_chat/multi_round.wav' },
+                  { name: 'SpeechCombine', src: './demo_files/ours/interactive/flight.wav', highlight: true },
+                ],
+              },
+            ]
+          },
+        ]
+      },
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -615,14 +740,18 @@
       accordionData.forEach((section, idx) => {
         // Flatten all demos from all sub-sections
         const allDemos = section.subSections.flatMap(sub => sub.demos);
-        const subSectionsHTML = allDemos.map((demo, index) => 
-          createDemoBlock(demo.title || `Demo ${index + 1}`, demo.script, demo.groupA, demo.scriptAudio)
-        ).join('');
+        const subSectionsHTML = allDemos.map((demo, index) => {
+          if (section.isMultiRound && demo.queries) {
+            return createMultiRoundDemoBlock(demo.title || `Demo ${index + 1}`, demo.queries, demo.groupA);
+          }
+          return createDemoBlock(demo.title || `Demo ${index + 1}`, demo.script, demo.groupA, demo.scriptAudio);
+        }).join('');
 
         const sectionHTML = createAccordionSection(
           section.title,
           section.sectionIntro,
-          subSectionsHTML
+          subSectionsHTML,
+          section.extraClass || ''
         );
         container.insertAdjacentHTML('beforeend', sectionHTML);
       });
